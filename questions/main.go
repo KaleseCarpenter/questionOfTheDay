@@ -5,13 +5,18 @@ import (
 )
 
 // Struct
+type question struct {
+	ID       string `json:"id"`
+	Question string `json:"question"`
+	Author   string `json:"author"`
+}
 
 // Slice or Map
 
 // Get All Questions
-func getAllQuestions() {
+// func getAllQuestions() {
 
-}
+// }
 
 // Get Question By ID
 // func getQuestionByID()  {
