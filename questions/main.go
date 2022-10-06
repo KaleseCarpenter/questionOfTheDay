@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,14 +25,22 @@ var questions = []question{
 }
 
 // Get All Questions
-// func getAllQuestions() {
-
-// }
+func getAllQuestions(c *gin.Context) {
+	c.JSON(http.StatusOK, questions)
+}
 
 // Get Question By ID
-// func getQuestionByID()  {
-
-// }
+func getQuestionByID(c *gin.Context) {
+	id := c.Param("id")
+	//singleQuestion exists,
+	for _, q := range questions {
+		if q.ID == id {
+			c.IndentedJSON(http.StatusOK, q)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Question Not Found"})
+}
 
 // Get a Random Question
 // func getRandomQuestions()  {
@@ -44,7 +54,7 @@ func main() {
 	router := gin.Default()
 	// Initialize my Routes
 	router.GET("/questions", getAllQuestions)
-	router.GET("/questions", getRandomQuestions)
+	//router.GET("/questions", getRandomQuestions)
 	router.GET("/questions/:id", getQuestionByID)
 	router.Run("0.0.0.0:8080")
 }
