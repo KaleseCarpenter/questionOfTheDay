@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,18 +45,28 @@ func getQuestionByID(c *gin.Context) {
 }
 
 // Get a Random Question
-// func getRandomQuestions()  {
-
-// }
+func getRandomQuestions(c *gin.Context) {
+	counter := 0
+	randNum := rand.Intn(len(questions))
+	for _, v := range questions {
+		if counter == randNum {
+			c.JSON(http.StatusOK, &v)
+		}
+		counter++
+	}
+	// rand.Seed(time.Now().Unix())
+	// q := rand.Int() % len(questions)
+	// return (questions[q])
+}
 
 func main() {
 	// Initialize randomization
-
+	rand.Seed(time.Now().Unix())
 	// Initialize Gin Router
 	router := gin.Default()
 	// Initialize my Routes
 	router.GET("/questions", getAllQuestions)
-	//router.GET("/questions", getRandomQuestions)
+	router.GET("/", getRandomQuestions)
 	router.GET("/questions/:id", getQuestionByID)
-	router.Run("0.0.0.0:8080")
+	router.Run("0.0.0.0:9090")
 }
