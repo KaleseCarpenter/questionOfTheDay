@@ -17,19 +17,42 @@ type question struct {
 
 // Slice or Map
 var questions = []question{
-	{ID: "1", Question: "What''s something you really resent paying for?", Author: "Kalese Carpenter"},
-	{ID: "2", Question: "If you couldn''t be convicted of any one type of crime, what criminal charge would you like to be immune to?", Author: "Mandee Rizzi"},
+	{ID: "1", Question: "What's something you really resent paying for?", Author: "Kalese Carpenter"},
+	{ID: "2", Question: "If you couldn't be convicted of any one type of crime, what criminal charge would you like to be immune to?", Author: "Mandee Rizzi"},
 	{ID: "3", Question: "In the past people were buried with the items they would need in the afterlife, what would you want buried with you so you could use it in the afterlife?", Author: "Zack Raney"},
 	{ID: "4", Question: "Who do you go out of your way to be nice to?", Author: "John Butcher"},
-	{ID: "5", Question: "What invention doesn''t get a lot of love, but has greatly improved the world?", Author: "Jessie Gorrell"},
+	{ID: "5", Question: "What invention doesn't get a lot of love, but has greatly improved the world?", Author: "Jessie Gorrell"},
 	{ID: "6", Question: "What movie quotes do you use on a regular basis?", Author: "Eric Boggs"},
-	{ID: "7", Question: "What “old person” things do you do?", Author: "Cha''Diamond Moody"},
+	{ID: "7", Question: "What “old person” things do you do?", Author: "Cha'Diamond Moody"},
 }
 
 // Get All Questions
 func getAllQuestions(c *gin.Context) {
+	// returning all the context, the data that we are sending is "questions". So we return a json obejct that has all of the questions in it
 	c.JSON(http.StatusOK, questions)
 }
+
+// Get One Specic Question
+/*func quesByID(c *gin.Context) {
+	id := c.Param("id")
+	question, err := getQuesByID(id)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"status": "404 Question Not Found"}) //return custom request for bad request or book not found
+		return
+	}
+	c.IndentedJSON(http.StatusOK, question)
+}*/
+
+// Get By ID
+/*func getQuesByID(id string) (*question, error) {
+	for i, b := range questions {
+		if b.ID == id {
+			return &questions[i], nil
+		}
+	}
+	return nil, errors.New("question wasn't found")
+}*/
 
 // Get Question By ID
 func getQuestionByID(c *gin.Context) {
@@ -54,19 +77,34 @@ func getRandomQuestions(c *gin.Context) {
 		}
 		counter++
 	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Question Not Found"})
 	// rand.Seed(time.Now().Unix())
 	// q := rand.Int() % len(questions)
 	// return (questions[q])
 }
 
+// Post New Book
+func createQuestion(c *gin.Context) { //c stores query parameters, headers
+	var newQuestion question // the new = question is of type = question
+
+	if err := c.BindJSON(&newQuestion); err != nil {
+		// if the error is not equal to null, in that case we shall simpy return
+		return
+	}
+
+	questions = append(questions, newQuestion)
+	c.IndentedJSON(http.StatusCreated, newQuestion)
+}
+
 func main() {
 	// Initialize randomization
 	rand.Seed(time.Now().Unix())
-	// Initialize Gin Router
+	// Initialize Gin Router,can route a specific route to a function with router variable
 	router := gin.Default()
 	// Initialize my Routes
 	router.GET("/questions", getAllQuestions)
 	router.GET("/", getRandomQuestions)
 	router.GET("/questions/:id", getQuestionByID)
+	router.POST("/questions", createQuestion)
 	router.Run("0.0.0.0:9090")
 }
