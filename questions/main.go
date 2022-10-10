@@ -33,28 +33,6 @@ func getAllQuestions(c *gin.Context) {
 	c.JSON(http.StatusOK, questions)
 }
 
-// Get One Specic Question
-/*func quesByID(c *gin.Context) {
-	id := c.Param("id")
-	question, err := getQuesByID(id)
-
-	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"status": "404 Question Not Found"}) //return custom request for bad request or book not found
-		return
-	}
-	c.IndentedJSON(http.StatusOK, question)
-}*/
-
-// Get By ID
-/*func getQuesByID(id string) (*question, error) {
-	for i, b := range questions {
-		if b.ID == id {
-			return &questions[i], nil
-		}
-	}
-	return nil, errors.New("question wasn't found")
-}*/
-
 // Get Question By ID
 func getQuestionByID(c *gin.Context) {
 	id := c.Param("id")
@@ -77,7 +55,7 @@ func getRandomQuestions(c *gin.Context) {
 		if counter == randNum {
 			c.JSON(http.StatusOK, &v)
 		}
-		counter++
+		counter++ // keep incrementing to get random question
 	}
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Question Not Found"})
 	// rand.Seed(time.Now().Unix())
@@ -85,7 +63,7 @@ func getRandomQuestions(c *gin.Context) {
 	// return (questions[q])
 }
 
-// Post New Book
+// Post New Question
 func createQuestion(c *gin.Context) { //c stores query parameters, headers
 	var newQuestion question // the new = question is of type = question
 	// Call BindJSON to bind the received JSON to newQuestion
@@ -109,3 +87,25 @@ func main() {
 	router.POST("/questions", createQuestion)
 	router.Run("0.0.0.0:9090")
 }
+
+// Get One Specic Question
+/*func quesByID(c *gin.Context) {
+	id := c.Param("id")
+	question, err := getQuesByID(id)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"status": "404 Question Not Found"}) //return custom request for bad request or book not found
+		return
+	}
+	c.IndentedJSON(http.StatusOK, question)
+}*/
+
+// Get By ID
+/*func getQuesByID(id string) (*question, error) {
+	for i, b := range questions {
+		if b.ID == id {
+			return &questions[i], nil
+		}
+	}
+	return nil, errors.New("question wasn't found")
+}*/
