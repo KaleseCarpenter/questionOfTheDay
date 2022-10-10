@@ -28,7 +28,8 @@ var questions = []question{
 
 // Get All Questions
 func getAllQuestions(c *gin.Context) {
-	// returning all the context, the data that we are sending is "questions". So we return a json obejct that has all of the questions in it
+	// Returning all the context, the data that we are sending is "questions".
+	// So we return a json obejct that has all of the questions in it
 	c.JSON(http.StatusOK, questions)
 }
 
@@ -57,7 +58,8 @@ func getAllQuestions(c *gin.Context) {
 // Get Question By ID
 func getQuestionByID(c *gin.Context) {
 	id := c.Param("id")
-	//singleQuestion exists,
+	// Loop over the list of questions, looking for
+	// a question whose ID value matches the parameter.
 	for _, q := range questions {
 		if q.ID == id {
 			c.IndentedJSON(http.StatusOK, q)
@@ -86,12 +88,11 @@ func getRandomQuestions(c *gin.Context) {
 // Post New Book
 func createQuestion(c *gin.Context) { //c stores query parameters, headers
 	var newQuestion question // the new = question is of type = question
-
+	// Call BindJSON to bind the received JSON to newQuestion
 	if err := c.BindJSON(&newQuestion); err != nil {
-		// if the error is not equal to null, in that case we shall simpy return
-		return
+		return // if the error is not equal to null, in that case we shall simpy return
 	}
-
+	// Add the new question to the slice.
 	questions = append(questions, newQuestion)
 	c.IndentedJSON(http.StatusCreated, newQuestion)
 }
